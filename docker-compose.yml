@@ -1,0 +1,18 @@
+version: "3"
+services:
+  mac_addr_api:
+    image: mac_addr_api:latest
+    build: ./mac_addr_api
+    container_name: mac-addr-api
+    expose:
+      - "8000"
+    command: gunicorn -w 4 -b :8000 mac_addr_api:app
+    restart: unless-stopped
+  nginx:
+    build: ./nginx
+    ports:
+      - "8080:80"
+      - "443:443"
+    depends_on:
+      - mac_addr_api
+    restart: unless-stopped
